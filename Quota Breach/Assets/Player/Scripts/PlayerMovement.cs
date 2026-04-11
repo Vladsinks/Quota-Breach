@@ -15,14 +15,23 @@ namespace Player
 
         [Header("Pick Up")]
         [SerializeField] private float _pickUpDistance = 5;
-        [SerializeField] private float _throwForce = 6;
         [SerializeField] private LayerMask _canPickUpLayer;
 
         [Header("Hold Settings")]
         [SerializeField] private float _holdDistance = 3f;
-        [SerializeField] private float _pullStrength = 40f;
-        [SerializeField] private float _maxHoldDistance = 2.5f;
-        [SerializeField] private float _maxObjectSpeed = 10f;
+        [SerializeField] private float _springStrength = 120f;   // мягкая пружина
+        [SerializeField] private float _springDamping = 15f;     // сглаживание
+        [SerializeField] private float _maxHoldDistance = 3f;
+        [SerializeField] private float _maxObjectSpeed = 6f;
+
+        [Header("Beam Power")]
+        [SerializeField] private float _beamPower = 1f;
+        [SerializeField] private float _beamPowerMultiplier = 1f;
+        [SerializeField] private float _maxBeamPower = 10f;
+
+        [Header("Mass Handling")]
+        [SerializeField] private float _baseMaxLiftMass = 8f;
+        [SerializeField] private float _massHardLimit = 25f;
 
         [Header("UI")]
         [SerializeField] private GameObject _hoverIndicator;
@@ -30,6 +39,7 @@ namespace Player
 
         private CharacterController _characterController;
         private Camera _playerCamera;
+        private Collider _playerCollider;
 
         private Vector3 _velocity;
         private Vector2 _rotation;
@@ -37,13 +47,13 @@ namespace Player
 
         private Rigidbody _currentObject;
         private Collider _currentCollider;
-        private Collider _playerCollider;
 
         private Vector3 _lastPos;
         private Vector3 _trackedVelocity;
         private readonly Queue<Vector3> _velBuffer = new();
-
         [SerializeField] private int _velocityBufferSize = 5;
+
+        private bool _isRotating = false;
 
         private void Start()
         {
@@ -62,9 +72,11 @@ namespace Player
             HandleMovement();
             HandleLook();
 
-            if (Input.GetMouseButtonDown(0)) PickUp();
+            if (Input.GetMouseButtonDown(0)) TryPickUp();
             if (Input.GetMouseButtonUp(0)) Drop();
-            if (Input.GetMouseButtonDown(1)) Drop(true);
+
+            if (Input.GetMouseButtonDown(1)) _isRotating = true;
+            if (Input.GetMouseButtonUp(1)) _isRotating = false;
 
             UpdateHoverIndicator();
             TrackVelocity();
@@ -74,7 +86,12 @@ namespace Player
         private void FixedUpdate()
         {
             if (_currentObject != null)
-                HoldObjectPhysics();
+            {
+                if (_isRotating)
+                    RotateHeldObject();
+                else
+                    HoldObjectSpring();
+            }
         }
 
         // ───────────────────────────────────────────────────────────────
@@ -137,10 +154,10 @@ namespace Player
         }
 
         // ───────────────────────────────────────────────────────────────
-        // PICK UP / DROP
+        // PICK UP WITH MASS CHECK
         // ───────────────────────────────────────────────────────────────
 
-        private void PickUp()
+        private void TryPickUp()
         {
             if (_currentObject != null) return;
 
@@ -151,18 +168,26 @@ namespace Player
                 _pickUpDistance,
                 _canPickUpLayer)) return;
 
-            _currentObject = hit.collider.GetComponent<Rigidbody>();
-            if (_currentObject == null) return;
+            Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            if (rb == null) return;
 
-            _currentCollider = _currentObject.GetComponent<Collider>();
+            if (rb.mass > _massHardLimit)
+                return;
+
+            float dynamicLimit = _baseMaxLiftMass * _beamPower;
+            if (rb.mass > dynamicLimit)
+                return;
+
+            _currentObject = rb;
+            _currentCollider = rb.GetComponent<Collider>();
 
             Physics.IgnoreCollision(_playerCollider, _currentCollider, true);
 
-            _lastPos = _currentObject.position;
+            _lastPos = rb.position;
             _velBuffer.Clear();
         }
 
-        private void Drop(bool throwObject = false)
+        private void Drop()
         {
             if (_currentObject == null) return;
 
@@ -170,25 +195,48 @@ namespace Player
 
             _currentObject.linearVelocity = _trackedVelocity;
 
-            if (throwObject)
-                _currentObject.AddForce(_playerCamera.transform.forward * _throwForce, ForceMode.Impulse);
-
             _currentObject = null;
             _velBuffer.Clear();
         }
 
         // ───────────────────────────────────────────────────────────────
-        // HOLD PHYSICS
+        // SOFT SPRING HOLDING (stable, smooth)
         // ───────────────────────────────────────────────────────────────
 
-        private void HoldObjectPhysics()
+        private void HoldObjectSpring()
         {
+            float power = _beamPower * _beamPowerMultiplier;
+
+            float massFactor = Mathf.Clamp01(1f / (_currentObject.mass * 0.25f));
+
             Vector3 holdPoint = _playerCamera.transform.position + _playerCamera.transform.forward * _holdDistance;
-            Vector3 dir = holdPoint - _currentObject.position;
+            Vector3 toTarget = holdPoint - _currentObject.position;
 
-            _currentObject.AddForce(dir * _pullStrength, ForceMode.Acceleration);
+            Vector3 springForce =
+                toTarget * (_springStrength * power * massFactor)
+                - _currentObject.linearVelocity * _springDamping;
 
-            _currentObject.linearVelocity = Vector3.ClampMagnitude(_currentObject.linearVelocity, _maxObjectSpeed);
+            _currentObject.AddForce(springForce, ForceMode.Acceleration);
+
+            _currentObject.linearVelocity = Vector3.ClampMagnitude(
+                _currentObject.linearVelocity,
+                _maxObjectSpeed * power
+            );
+        }
+
+        // ───────────────────────────────────────────────────────────────
+        // ROTATION MODE (ПКМ)
+        // ───────────────────────────────────────────────────────────────
+
+        private void RotateHeldObject()
+        {
+            float rotX = Input.GetAxis("Mouse X") * 5f;
+            float rotY = -Input.GetAxis("Mouse Y") * 5f;
+
+            _currentObject.angularVelocity = Vector3.zero;
+
+            _currentObject.transform.Rotate(_playerCamera.transform.up, rotX, Space.World);
+            _currentObject.transform.Rotate(_playerCamera.transform.right, rotY, Space.World);
         }
 
         // ───────────────────────────────────────────────────────────────
@@ -223,6 +271,15 @@ namespace Player
 
             if (Vector3.Distance(_currentObject.position, holdPoint) > _maxHoldDistance)
                 Drop();
+        }
+
+        // ───────────────────────────────────────────────────────────────
+        // BEAM UPGRADE
+        // ───────────────────────────────────────────────────────────────
+
+        public void UpgradeBeamPower(float amount)
+        {
+            _beamPower = Mathf.Clamp(_beamPower + amount, 1f, _maxBeamPower);
         }
     }
 }
