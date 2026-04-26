@@ -7,11 +7,7 @@ public class Wave : MonoBehaviour
     [SerializeField] private float Speed = 0.1f;
     [SerializeField] private float MaxTime = 50f;
 
-    [SerializeField] private Color Wall;
-    [SerializeField] private Color Scrap;
-    [SerializeField] private Color Enemy;
     float tim = 0f;
-    Renderer _renderer;
     
     void Start()
     {
@@ -25,34 +21,14 @@ public class Wave : MonoBehaviour
             transform.localScale += new Vector3(Speed, Speed, Speed);
             tim++;
         }
-        else  Destroy(this.gameObject, 2.1f);
+        else  Destroy(this.gameObject);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collision)
     {
-        //StartCoroutine(ChangeColorRoutine());
-        _renderer = other.GetComponent<Renderer>();
-
-        if (other.CompareTag("Wall")) 
+        if (collision.gameObject.GetComponent<ChangeColor>() == null)
         {
-            StartCoroutine(ChangeColorRoutine(Wall));
+            collision.gameObject.AddComponent<ChangeColor>();
         }
-        else if (other.CompareTag("Scrap")) 
-        {
-            StartCoroutine(ChangeColorRoutine(Scrap));
-        }
-        else if (other.CompareTag("Enemy")) 
-        {
-            StartCoroutine(ChangeColorRoutine(Enemy));
-        }
-    }
-
-    private IEnumerator ChangeColorRoutine(Color color)
-    {
-        _renderer.material.color = color;
-        yield return new WaitForSeconds(1f);
-        _renderer.material.color = Color.black;
-    }
-
-    
+    }   
 }
