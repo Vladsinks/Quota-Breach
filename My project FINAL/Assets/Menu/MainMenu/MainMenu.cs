@@ -1,23 +1,40 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject AreYouSure, Error;
+    [SerializeField] private GameObject AreYouSure, Error, NewGameSettings, Settings, Buttons;
+    [SerializeField] private TMP_InputField SeedField;
+    int seed;
+
+    [SerializeField] private TMP_Text Sensivity_text;
+    [SerializeField] private Scrollbar Sensivity_bar;
+    float Sensivity;
+
+    
 
     void Start()
     {
         AreYouSure.SetActive(false);
         Error.SetActive(false);
+        NewGameSettings.SetActive(false);
+        Settings.SetActive(false);
+
+        //Загрузка сенсы
+        if (PlayerPrefs.HasKey("Sensivity")) Sensivity = PlayerPrefs.GetFloat("Sensivity");
+        else Sensivity = 50f;
     }
 
     void Update()
     {
-        
+        Sensivity_text.text = "Sensivity: " + (Sensivity_bar.value * 100f).ToString("F0");
     }
 
     public void MainSave()
     {
-        
+        Sensivity = Sensivity_bar.value * 100;
+        PlayerPrefs.SetFloat("Sensivity", Sensivity);
     }
 
     public void MainExitButton()
@@ -28,14 +45,31 @@ public class MainMenu : MonoBehaviour
 
     public void MainNewGameButton()
     {
-        if (PlayerPrefs.HasKey("Money")) AreYouSure.SetActive(true);
+        if (PlayerPrefs.HasKey("Money"))
+        {
+            AreYouSure.SetActive(true);
+            Buttons.SetActive(false);
+        }
         else NewGame();
     }
 
     public void NewGame()
     {
+        AreYouSure.SetActive(false);
+        NewGameSettings.SetActive(true);
+
+        if (int.TryParse(SeedField.text, out int result))
+        {
+            string RawSeed = SeedField.text;
+            seed = int.Parse(RawSeed);
+        }
+        else
+        {
+            seed = Random.Range(0, 999999);
+        }
         PlayerPrefs.DeleteKey("Money");
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Test");
+        PlayerPrefs.SetInt("seed", seed);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("GenerationTest");
     }
 
     public void MainContinueButton()
@@ -47,5 +81,11 @@ public class MainMenu : MonoBehaviour
     public void Continue()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Test");
+    }
+
+    public void SettingsButton()
+    {
+        Settings.SetActive(true);
+        Sensivity_bar.value = Sensivity / 100;
     }
 }

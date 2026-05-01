@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3151102981771485396}
   - component: {fileID: 3400886775153644007}
   - component: {fileID: 2784918453791846356}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,7 +114,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7593382649480374449}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: EntrancePoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,9 +148,9 @@ GameObject:
   - component: {fileID: 99722663187480094}
   - component: {fileID: 4147959529742294465}
   - component: {fileID: 4306816132111975324}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (4)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -250,9 +250,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3610214680305692336}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -284,7 +284,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4173478357068058876}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ExitPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,9 +318,9 @@ GameObject:
   - component: {fileID: 5700074618333626833}
   - component: {fileID: 663377901220950762}
   - component: {fileID: 2360811890898642344}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -423,9 +423,9 @@ GameObject:
   - component: {fileID: 5113236845295031592}
   - component: {fileID: 7287815467048508479}
   - component: {fileID: 7959358605902568456}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -528,9 +528,9 @@ GameObject:
   - component: {fileID: 5468503689122348813}
   - component: {fileID: 4016335156724162031}
   - component: {fileID: 4630292709638304061}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (5)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -630,9 +630,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6465705548237995854}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -667,9 +667,9 @@ GameObject:
   - component: {fileID: 5072711775577378471}
   - component: {fileID: 5455323885368836907}
   - component: {fileID: 8913304463819873480}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Plane
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -773,9 +773,9 @@ GameObject:
   - component: {fileID: 2961772094870204493}
   - component: {fileID: 4959824076279836813}
   - component: {fileID: 7806748082455938203}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -876,8 +876,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1229835653799066934}
   - component: {fileID: 2061794708592533003}
-  m_Layer: 0
-  m_Name: Straight
+  m_Layer: 9
+  m_Name: Room_Special
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -899,6 +899,7 @@ Transform:
   - {fileID: 7593382649480374449}
   - {fileID: 4173478357068058876}
   - {fileID: 4277917211781384410}
+  - {fileID: 7595786683301385201}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2061794708592533003
@@ -915,8 +916,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entrancePoint: {fileID: 7593382649480374449}
   exitPoint: {fileID: 4173478357068058876}
-  roomType: 0
-  roomLength: 10
+  rotationOffset: 0
+  spawnChance: 1
+  events: []
 --- !u!1 &7777124220925623565
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,9 +931,9 @@ GameObject:
   - component: {fileID: 2404643680407478364}
   - component: {fileID: 9096843482424914263}
   - component: {fileID: 7120339353263672172}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (2)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1031,7 +1033,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4277917211781384410}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Geometry
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1071,9 +1073,9 @@ GameObject:
   - component: {fileID: 7723935064960139630}
   - component: {fileID: 1023518133661403392}
   - component: {fileID: 3937162622502027840}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (4)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1176,9 +1178,9 @@ GameObject:
   - component: {fileID: 3544559654633282692}
   - component: {fileID: 3053742863275029766}
   - component: {fileID: 6886636209640863087}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube (3)
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1269,3 +1271,65 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &2463777541495849839
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1229835653799066934}
+    m_Modifications:
+    - target: {fileID: 2936717927469924868, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_Name
+      value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+--- !u!4 &7595786683301385201 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5429299496190234782, guid: e3deef47e07331944b56475d8c963e3a, type: 3}
+  m_PrefabInstance: {fileID: 2463777541495849839}
+  m_PrefabAsset: {fileID: 0}

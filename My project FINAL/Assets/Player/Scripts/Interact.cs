@@ -26,6 +26,7 @@ public class Interact : MonoBehaviour
 
                 if (Input.GetKey(KeyCode.E) && hit.collider.CompareTag("Door"))
                 {
+                    hit.collider.gameObject.GetComponent<Door>().OpenDoor();
                     Destroy(hit.collider.gameObject);
                     Player.GetComponentInChildren<InGameMenu>().RoomCount += 1;
                     Aim.SetActive(false);

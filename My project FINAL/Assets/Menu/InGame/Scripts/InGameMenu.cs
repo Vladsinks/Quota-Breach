@@ -32,6 +32,7 @@ public class InGameMenu : MonoBehaviour
         //Загрузка денег
         if (PlayerPrefs.HasKey("Money")) Money = PlayerPrefs.GetFloat("Money");
         else Money = 0f;
+
     }
 
     void Update()
