@@ -50,14 +50,15 @@ public class MainMenu : MonoBehaviour
             AreYouSure.SetActive(true);
             Buttons.SetActive(false);
         }
-        else NewGame();
+        else
+        {
+            NewGameSettings.SetActive(true);
+            Buttons.SetActive(false);
+        }
     }
 
     public void NewGame()
     {
-        AreYouSure.SetActive(false);
-        NewGameSettings.SetActive(true);
-
         if (int.TryParse(SeedField.text, out int result))
         {
             string RawSeed = SeedField.text;

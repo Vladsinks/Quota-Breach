@@ -22,10 +22,16 @@ public class LevelGenerator : MonoBehaviour
 
     void Start()
     {
-        if (useCustomSeed)
+        if (useCustomSeed) Random.InitState(seed);
+
+        else if (PlayerPrefs.HasKey("seed"))
+        {
+            seed = PlayerPrefs.GetInt("seed");
             Random.InitState(seed);
-        else
-            seed = Random.Range(0, 999999);
+        }
+
+        else seed = Random.Range(0, 999999);
+
 
         // 1. Создаём первую комнату
         currentRoom = Instantiate(roomPrefabs[0], Vector3.zero, Quaternion.identity);
